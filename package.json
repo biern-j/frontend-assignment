@@ -1,0 +1,19 @@
+{
+  "name": "frontend-assignment",
+  "version": "1.0.0",
+  "description": "frontend assignment task js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack-dev-server",
+    "build": "webpack"
+  },
+  "author": "STP",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "html-webpack-plugin": "^3.2.0",
+    "webpack": "^4.28.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10"
+  }
+}
