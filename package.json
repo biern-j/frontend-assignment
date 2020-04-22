@@ -46,6 +46,7 @@
     "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
+    "bootstrap": "^4.4.1",
     "ramda": "^0.27.0"
   }
 }
