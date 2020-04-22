@@ -4,6 +4,7 @@ export type ArticleProps = {
   id: number;
   date: string;
   image: string;
+  category: string;
   preamble: string;
   title: string;
 };
