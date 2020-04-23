@@ -15,6 +15,7 @@ import "bootstrap/dist/css/bootstrap.css";
 // formik for filter https://jaredpalmer.com/formik/docs/overview
 
 type State = {
+  loading: boolean;
   articles: ArticleProps[];
   categories: Category[];
   sortingOrder: string;
@@ -24,6 +25,7 @@ class App extends React.Component<{}, State> {
   constructor(props: {}) {
     super(props);
     this.state = {
+      loading: true,
       articles: [],
       categories: [],
       sortingOrder: "des"
@@ -36,7 +38,8 @@ class App extends React.Component<{}, State> {
 
     this.setState({
       articles: articles,
-      categories: getUniqueArticlesCategories(articles)
+      categories: getUniqueArticlesCategories(articles),
+      loading: false
     });
   }
 
@@ -60,7 +63,9 @@ class App extends React.Component<{}, State> {
     return (
       <div>
         <div>
-          {this.state.articles.length === 0 ? (
+          {this.state.loading ? (
+            "loader"
+          ) : this.state.articles.length === 0 ? (
             <EmptyView />
           ) : (
             <div>
@@ -77,11 +82,9 @@ class App extends React.Component<{}, State> {
                 />
               </div>
               <ul>
-                {...filterByCategory(
-                  sortedArticlesByDate(
-                    this.state.articles,
-                    this.state.sortingOrder
-                  ),
+                {...prepareArticlesList(
+                  this.state.articles,
+                  this.state.sortingOrder,
                   this.state.categories
                 ).map((article: ArticleProps) => (
                   <li key={article.id}>
@@ -96,6 +99,16 @@ class App extends React.Component<{}, State> {
     );
   }
 }
+
+const prepareArticlesList = (
+  articles: ArticleProps[],
+  sortingOrder: string,
+  categories: Category[]
+) => {
+  const sortedArticles = sortedArticlesByDate(articles, sortingOrder);
+  const filteredArticles = filterByCategory(sortedArticles, categories);
+  return filteredArticles;
+};
 
 const sortedArticlesByDate = (
   articles: ArticleProps[],
