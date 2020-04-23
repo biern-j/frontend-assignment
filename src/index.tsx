@@ -1,19 +1,23 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { sortBy } from "ramda";
+import parse from "date-fns/parse";
+import nb from "date-fns/locale/nb";
 
 import { articlesRequest } from "./apiHelpers";
 import { Article, ArticleProps } from "./components/article";
 import { CategoriesChecklist, Category } from "./components/categories";
 import { EmptyView } from "./components/emptyView";
+import { SortingOrder } from "./components/sortingOrder";
 
 import "bootstrap/dist/css/bootstrap.css";
-import { check } from "Test";
 //react-select for sort https://react-select.com/home#getting-started
 // formik for filter https://jaredpalmer.com/formik/docs/overview
 
 type State = {
   articles: ArticleProps[];
   categories: Category[];
+  sortingOrder: boolean;
 };
 
 class App extends React.Component<{}, State> {
@@ -21,9 +25,11 @@ class App extends React.Component<{}, State> {
     super(props);
     this.state = {
       articles: [],
-      categories: []
+      categories: [],
+      sortingOrder: true
     };
     this.toggleCategory = this.toggleCategory.bind(this);
+    this.toggleSortingOrder = this.toggleSortingOrder.bind(this);
   }
   async componentDidMount() {
     const articles = await getArticles();
@@ -32,6 +38,10 @@ class App extends React.Component<{}, State> {
       articles: articles,
       categories: getUniqueArticlesCategories(articles)
     });
+  }
+
+  toggleSortingOrder() {
+    this.setState({ sortingOrder: !this.state.sortingOrder });
   }
 
   toggleCategory(categoryName: string) {
@@ -45,12 +55,12 @@ class App extends React.Component<{}, State> {
   }
 
   render() {
-    console.log(
-      "this.state.articles",
+    const sorted = sortedArticlesByDate(
       this.state.articles,
-      "category",
-      this.state.categories
+      this.state.sortingOrder
     );
+    console.log("sorted", sorted);
+
     return (
       <div>
         <div>
@@ -58,6 +68,12 @@ class App extends React.Component<{}, State> {
             <EmptyView />
           ) : (
             <div>
+              <div>
+                <SortingOrder
+                  sortingOrder={this.state.sortingOrder}
+                  toggleSortingOrder={this.toggleSortingOrder}
+                />
+              </div>
               <div>
                 <CategoriesChecklist
                   categories={this.state.categories}
@@ -81,6 +97,36 @@ class App extends React.Component<{}, State> {
     );
   }
 }
+
+const sortedArticlesByDate = (
+  articles: ArticleProps[],
+  sortingOrder: boolean
+) => {
+  // const sortByOrder = (a: ArticleProps, b: ArticleProps) => {
+  //   // const splitedFirstDate = a.date.split(" ");
+  //   // const splitedSecondDate = b.date.split(" ");
+  //   // const firstDateEvent = new Date(a.date);
+  //   // const secondDateEvent = new Date(b.date);
+  //   // const UTCFirstDate = firstDateEvent.toUTCString();
+  //   // const UTCSecondDate = secondDateEvent.toUTCString();
+  // const result = parse(a.date, "do 'de' MMMM", new Date(2010, 0, 1), {
+  //   locale: nb
+  // });
+
+  //   console.log("result", result);
+  //   return sortingOrder ? 2 - 1 : 1 - 2;
+  // };
+  const SortByDateOrder = sortBy(a => {
+    const result = parse(a.date, "dd. MMMM yyyy", new Date(), {
+      locale: nb
+    });
+    console.log("result", result);
+    return result;
+  });
+  const sortyedByDate = SortByDateOrder(articles);
+
+  return sortyedByDate;
+};
 
 const filterByCategory = (articles: ArticleProps[], categories: Category[]) => {
   const checkedCategory = categories.filter(category => category.checked);

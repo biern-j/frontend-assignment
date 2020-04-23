@@ -10,5 +10,8 @@ export type ArticleProps = {
 };
 
 export const Article = (props: ArticleProps) => (
-  <div>{props.title || "nic"}</div>
+  <div>
+    {props.title || "nic"}
+    <div>{props.date}</div>
+  </div>
 );

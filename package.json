@@ -46,7 +46,9 @@
     "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
+    "@types/date-fns": "^2.6.0",
     "bootstrap": "^4.4.1",
+    "date-fns": "^2.12.0",
     "ramda": "^0.27.0"
   }
 }
