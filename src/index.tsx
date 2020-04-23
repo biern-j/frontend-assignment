@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { sortBy } from "ramda";
+import { sortWith, descend, ascend } from "ramda";
 import parse from "date-fns/parse";
 import nb from "date-fns/locale/nb";
 
@@ -17,7 +17,7 @@ import "bootstrap/dist/css/bootstrap.css";
 type State = {
   articles: ArticleProps[];
   categories: Category[];
-  sortingOrder: boolean;
+  sortingOrder: string;
 };
 
 class App extends React.Component<{}, State> {
@@ -26,7 +26,7 @@ class App extends React.Component<{}, State> {
     this.state = {
       articles: [],
       categories: [],
-      sortingOrder: true
+      sortingOrder: "des"
     };
     this.toggleCategory = this.toggleCategory.bind(this);
     this.toggleSortingOrder = this.toggleSortingOrder.bind(this);
@@ -41,7 +41,9 @@ class App extends React.Component<{}, State> {
   }
 
   toggleSortingOrder() {
-    this.setState({ sortingOrder: !this.state.sortingOrder });
+    this.setState({
+      sortingOrder: this.state.sortingOrder === "des" ? "asc" : "des"
+    });
   }
 
   toggleCategory(categoryName: string) {
@@ -55,12 +57,6 @@ class App extends React.Component<{}, State> {
   }
 
   render() {
-    const sorted = sortedArticlesByDate(
-      this.state.articles,
-      this.state.sortingOrder
-    );
-    console.log("sorted", sorted);
-
     return (
       <div>
         <div>
@@ -82,7 +78,10 @@ class App extends React.Component<{}, State> {
               </div>
               <ul>
                 {...filterByCategory(
-                  this.state.articles,
+                  sortedArticlesByDate(
+                    this.state.articles,
+                    this.state.sortingOrder
+                  ),
                   this.state.categories
                 ).map((article: ArticleProps) => (
                   <li key={article.id}>
@@ -100,32 +99,25 @@ class App extends React.Component<{}, State> {
 
 const sortedArticlesByDate = (
   articles: ArticleProps[],
-  sortingOrder: boolean
+  sortingOrder: string
 ) => {
-  // const sortByOrder = (a: ArticleProps, b: ArticleProps) => {
   //   // const splitedFirstDate = a.date.split(" ");
   //   // const splitedSecondDate = b.date.split(" ");
   //   // const firstDateEvent = new Date(a.date);
   //   // const secondDateEvent = new Date(b.date);
   //   // const UTCFirstDate = firstDateEvent.toUTCString();
   //   // const UTCSecondDate = secondDateEvent.toUTCString();
-  // const result = parse(a.date, "do 'de' MMMM", new Date(2010, 0, 1), {
-  //   locale: nb
-  // });
 
-  //   console.log("result", result);
-  //   return sortingOrder ? 2 - 1 : 1 - 2;
-  // };
-  const SortByDateOrder = sortBy(a => {
-    const result = parse(a.date, "dd. MMMM yyyy", new Date(), {
-      locale: nb
-    });
-    console.log("result", result);
-    return result;
-  });
-  const sortyedByDate = SortByDateOrder(articles);
+  const parseDateFormat = (a: ArticleProps) =>
+    parse(a.date, "dd. MMMM yyyy", new Date(), { locale: nb });
 
-  return sortyedByDate;
+  const sortByOrder = sortWith<ArticleProps>(
+    sortingOrder === "asc"
+      ? [ascend(parseDateFormat)]
+      : [descend(parseDateFormat)]
+  );
+
+  return sortByOrder(articles);
 };
 
 const filterByCategory = (articles: ArticleProps[], categories: Category[]) => {

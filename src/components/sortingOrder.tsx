@@ -1,6 +1,6 @@
 import React from "react";
 type SortingOrderProps = {
-  sortingOrder: boolean;
+  sortingOrder: string;
   toggleSortingOrder: () => void;
 };
 export const SortingOrder = (props: SortingOrderProps) => (
@@ -8,13 +8,13 @@ export const SortingOrder = (props: SortingOrderProps) => (
     <p>Sort:</p>
     <form>
       <label>
-        {props.sortingOrder ? "Newest" : "Oldest"}
+        {props.sortingOrder === "asc" ? "Oldest" : "Newest"}
         <button type="button" onClick={props.toggleSortingOrder}>
           <span>
-            {props.sortingOrder ? (
-              <i className="material-icons">expand_more</i>
-            ) : (
+            {props.sortingOrder === "asc" ? (
               <i className="material-icons">expand_less</i>
+            ) : (
+              <i className="material-icons">expand_more</i>
             )}
           </span>
         </button>
