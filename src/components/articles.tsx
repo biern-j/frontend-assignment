@@ -1,6 +1,7 @@
 import React from "react";
 
 import { EmptyView } from "./emptyView";
+import { SingleArticle } from "./articleStyle";
 
 // As a PO I decided to allow image and preamble to be null, but if other articles' property is null, article shouldn't be rendered.
 export type Article = {
@@ -35,9 +36,13 @@ export const Articles = (props: { articles: Article[] }) => (
                     {article.date || <EmptyView />}
                   </div>
                 </div>
-                <div className="row article-preamble">
-                  {article.preamble || <EmptyView />}
-                </div>
+
+                {(
+                  <div className="row">
+                    <div className="article-preamble">{article.preamble}</div>
+                    <button>[preamble]</button>
+                  </div>
+                ) || <EmptyView />}
               </div>
             </div>
           </div>
