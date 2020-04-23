@@ -5,7 +5,7 @@ type SortingOrderProps = {
 };
 export const Sorter = (props: SortingOrderProps) => (
   <div>
-    <p>Sort:</p>
+    <p>Sort by:</p>
     <form>
       <label>
         {props.sortingOrder === "asc" ? "Oldest" : "Newest"}
