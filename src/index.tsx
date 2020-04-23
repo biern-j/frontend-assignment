@@ -1,14 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { sortWith, descend, ascend } from "ramda";
+import { sortWith, descend, ascend, props } from "ramda";
 import parse from "date-fns/parse";
 import nb from "date-fns/locale/nb";
 
 import { articlesRequest } from "./apiHelpers";
-import { Article, ArticleProps } from "./components/article";
+import { Articles, Article } from "./components/articles";
 import { CategoriesChecklist, Category } from "./components/categories";
 import { EmptyView } from "./components/emptyView";
-import { Sorter } from "./components/sorter";
+import { SortOrdering, SortingOrders } from "./components/sortOrdering";
 
 import "bootstrap/dist/css/bootstrap.css";
 //react-select for sort https://react-select.com/home#getting-started
@@ -16,9 +16,9 @@ import "bootstrap/dist/css/bootstrap.css";
 
 type State = {
   loading: boolean;
-  articles: ArticleProps[];
+  articles: Article[];
   categories: Category[];
-  sortingOrder: string;
+  sortingOrder: SortingOrders;
 };
 
 class App extends React.Component<{}, State> {
@@ -28,7 +28,7 @@ class App extends React.Component<{}, State> {
       loading: true,
       articles: [],
       categories: [],
-      sortingOrder: "des"
+      sortingOrder: "desc"
     };
     this.toggleCategory = this.toggleCategory.bind(this);
     this.toggleSortingOrder = this.toggleSortingOrder.bind(this);
@@ -37,7 +37,7 @@ class App extends React.Component<{}, State> {
     const articles = await getArticles();
 
     this.setState({
-      articles: articles,
+      articles,
       categories: getUniqueArticlesCategories(articles),
       loading: false
     });
@@ -45,7 +45,7 @@ class App extends React.Component<{}, State> {
 
   toggleSortingOrder() {
     this.setState({
-      sortingOrder: this.state.sortingOrder === "des" ? "asc" : "des"
+      sortingOrder: this.state.sortingOrder === "desc" ? "asc" : "desc"
     });
   }
 
@@ -70,7 +70,7 @@ class App extends React.Component<{}, State> {
           ) : (
             <div>
               <div>
-                <Sorter
+                <SortOrdering
                   sortingOrder={this.state.sortingOrder}
                   toggleSortingOrder={this.toggleSortingOrder}
                 />
@@ -81,17 +81,13 @@ class App extends React.Component<{}, State> {
                   toggleCategory={this.toggleCategory}
                 />
               </div>
-              <ul>
-                {...prepareArticlesList(
+              <Articles
+                articles={prepareArticlesList(
                   this.state.articles,
                   this.state.sortingOrder,
                   this.state.categories
-                ).map((article: ArticleProps) => (
-                  <li key={article.id}>
-                    <Article {...article} />
-                  </li>
-                ))}
-              </ul>
+                )}
+              />
             </div>
           )}
         </div>
@@ -101,8 +97,8 @@ class App extends React.Component<{}, State> {
 }
 
 const prepareArticlesList = (
-  articles: ArticleProps[],
-  sortingOrder: string,
+  articles: Article[],
+  sortingOrder: SortingOrders,
   categories: Category[]
 ) => {
   const sortedArticles = sortedArticlesByDate(articles, sortingOrder);
@@ -111,20 +107,13 @@ const prepareArticlesList = (
 };
 
 const sortedArticlesByDate = (
-  articles: ArticleProps[],
-  sortingOrder: string
+  articles: Article[],
+  sortingOrder: SortingOrders
 ) => {
-  //   // const splitedFirstDate = a.date.split(" ");
-  //   // const splitedSecondDate = b.date.split(" ");
-  //   // const firstDateEvent = new Date(a.date);
-  //   // const secondDateEvent = new Date(b.date);
-  //   // const UTCFirstDate = firstDateEvent.toUTCString();
-  //   // const UTCSecondDate = secondDateEvent.toUTCString();
-
-  const parseDateFormat = (a: ArticleProps) =>
+  const parseDateFormat = (a: Article) =>
     parse(a.date, "dd. MMMM yyyy", new Date(), { locale: nb });
 
-  const sortByOrder = sortWith<ArticleProps>(
+  const sortByOrder = sortWith<Article>(
     sortingOrder === "asc"
       ? [ascend(parseDateFormat)]
       : [descend(parseDateFormat)]
@@ -133,20 +122,22 @@ const sortedArticlesByDate = (
   return sortByOrder(articles);
 };
 
-const filterByCategory = (articles: ArticleProps[], categories: Category[]) => {
-  const checkedCategory = categories.filter(category => category.checked);
-  const checkoedCategoryName = checkedCategory.map(catgory => catgory.category);
-  if (checkedCategory.length === 0) {
+const filterByCategory = (articles: Article[], categories: Category[]) => {
+  const categoriesNames = categories
+    .filter(category => category.checked)
+    .map(catgory => catgory.category);
+
+  if (categoriesNames.length === 0) {
     return articles;
   } else {
     return articles.filter(article =>
-      checkoedCategoryName.includes(article.category)
+      categoriesNames.includes(article.category)
     );
   }
 };
 
-const getUniqueArticlesCategories = (articles: ArticleProps[]) => {
-  const getUniqueCategorys = (acc: Category[], curr: ArticleProps) =>
+const getUniqueArticlesCategories = (articles: Article[]) => {
+  const getUniqueCategorys = (acc: Category[], curr: Article) =>
     acc.find(item => item.category === curr.category)
       ? acc
       : [...acc, { category: curr.category, checked: true }];
@@ -154,15 +145,15 @@ const getUniqueArticlesCategories = (articles: ArticleProps[]) => {
   return articles.reduce(getUniqueCategorys, []);
 };
 
-const getArticles = async () => {
-  const sportArticles = await articlesRequest("articles/sports");
-  const fashionArticles = await articlesRequest("articles/fashion");
-  const articles = [
-    ...(sportArticles.articles || []),
-    ...(fashionArticles.articles || [])
-  ];
-
-  return articles;
+const getArticles = async (): Promise<Article[]> => {
+  const articles = await Promise.all([
+    articlesRequest("articles/sports"),
+    articlesRequest("articles/fashion")
+  ]);
+  return articles.reduce(
+    (acc, curr) => [...acc, ...(curr.articles || [])],
+    [] as Article[]
+  );
 };
 
 ReactDOM.render(<App />, document.getElementById("app"));

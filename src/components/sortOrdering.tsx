@@ -1,9 +1,12 @@
 import React from "react";
+// newlines
 type SortingOrderProps = {
-  sortingOrder: string;
+  sortingOrder: SortingOrders;
   toggleSortingOrder: () => void;
 };
-export const Sorter = (props: SortingOrderProps) => (
+export type SortingOrders = "asc" | "desc";
+
+export const SortOrdering = (props: SortingOrderProps) => (
   <div>
     <p>Sort by:</p>
     <form>

@@ -1,4 +1,15 @@
-export const articlesRequest = async (url: string) => {
+type ArticleResponse = {
+  id: number;
+  date: string;
+  image?: string | null;
+  category: string;
+  title: string;
+  preamble?: string | null;
+};
+
+export const articlesRequest = async (
+  url: string
+): Promise<{ articles?: ArticleResponse[]; message?: string }> => {
   try {
     const response = await fetch(`http://localhost:6010/${url}`, {
       method: "GET"
@@ -7,5 +18,6 @@ export const articlesRequest = async (url: string) => {
     return articles;
   } catch (e) {
     console.log("e", e.message);
+    return { articles: [] };
   }
 };
