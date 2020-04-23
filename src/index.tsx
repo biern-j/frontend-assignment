@@ -8,7 +8,7 @@ import { articlesRequest } from "./apiHelpers";
 import { Article, ArticleProps } from "./components/article";
 import { CategoriesChecklist, Category } from "./components/categories";
 import { EmptyView } from "./components/emptyView";
-import { SortingOrder } from "./components/sortingOrder";
+import { Sorter } from "./components/sorter";
 
 import "bootstrap/dist/css/bootstrap.css";
 //react-select for sort https://react-select.com/home#getting-started
@@ -65,7 +65,7 @@ class App extends React.Component<{}, State> {
           ) : (
             <div>
               <div>
-                <SortingOrder
+                <Sorter
                   sortingOrder={this.state.sortingOrder}
                   toggleSortingOrder={this.toggleSortingOrder}
                 />

@@ -3,7 +3,7 @@ type SortingOrderProps = {
   sortingOrder: string;
   toggleSortingOrder: () => void;
 };
-export const SortingOrder = (props: SortingOrderProps) => (
+export const Sorter = (props: SortingOrderProps) => (
   <div>
     <p>Sort:</p>
     <form>
