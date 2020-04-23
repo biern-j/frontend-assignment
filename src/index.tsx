@@ -1,12 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import { articlesRequest } from "./api-helpers";
+import { articlesRequest } from "./apiHelpers";
 import { Article, ArticleProps } from "./components/article";
 import { CategoriesChecklist, Category } from "./components/categories";
-import { EmptyView } from "./components/empty-view";
+import { EmptyView } from "./components/emptyView";
 
 import "bootstrap/dist/css/bootstrap.css";
+import { check } from "Test";
 //react-select for sort https://react-select.com/home#getting-started
 // formik for filter https://jaredpalmer.com/formik/docs/overview
 
@@ -64,7 +65,10 @@ class App extends React.Component<{}, State> {
                 />
               </div>
               <ul>
-                {this.state.articles.map((article: ArticleProps) => (
+                {...filterByCategory(
+                  this.state.articles,
+                  this.state.categories
+                ).map((article: ArticleProps) => (
                   <li key={article.id}>
                     <Article {...article} />
                   </li>
@@ -77,6 +81,18 @@ class App extends React.Component<{}, State> {
     );
   }
 }
+
+const filterByCategory = (articles: ArticleProps[], categories: Category[]) => {
+  const checkedCategory = categories.filter(category => category.checked);
+  const checkoedCategoryName = checkedCategory.map(catgory => catgory.category);
+  if (checkedCategory.length === 0) {
+    return articles;
+  } else {
+    return articles.filter(article =>
+      checkoedCategoryName.includes(article.category)
+    );
+  }
+};
 
 const getUniqueArticlesCategories = (articles: ArticleProps[]) => {
   const getUniqueCategorys = (acc: Category[], curr: ArticleProps) =>
@@ -94,15 +110,6 @@ const getArticles = async () => {
     ...(sportArticles.articles || []),
     ...(fashionArticles.articles || [])
   ];
-  console.log(
-    "testSport",
-    "sport",
-    sportArticles,
-    "fashion",
-    fashionArticles,
-    "articles",
-    articles
-  );
 
   return articles;
 };
