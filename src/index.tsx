@@ -10,6 +10,8 @@ import { CategoriesChecklist, Category } from "./components/categories";
 import { EmptyView } from "./components/emptyView";
 import { SortOrdering, SortingOrders } from "./components/sortOrdering";
 
+import { LeftCol, RightCol, ArticlesControl, Loader } from "./indexStyle";
+
 import "bootstrap/dist/css/bootstrap.css";
 //react-select for sort https://react-select.com/home#getting-started
 // formik for filter https://jaredpalmer.com/formik/docs/overview
@@ -60,36 +62,42 @@ class App extends React.Component<{}, State> {
   }
 
   render() {
-    return (
-      <div>
-        <div>
-          {this.state.loading ? (
-            "loader"
-          ) : this.state.articles.length === 0 ? (
-            <EmptyView />
-          ) : (
-            <div>
-              <div>
-                <SortOrdering
-                  sortingOrder={this.state.sortingOrder}
-                  toggleSortingOrder={this.toggleSortingOrder}
-                />
-              </div>
-              <div>
-                <CategoriesChecklist
-                  categories={this.state.categories}
-                  toggleCategory={this.toggleCategory}
-                />
-              </div>
-              <Articles
-                articles={prepareArticlesList(
-                  this.state.articles,
-                  this.state.sortingOrder,
-                  this.state.categories
-                )}
-              />
-            </div>
-          )}
+    return this.state.loading ? (
+      <Loader>
+        <div className="spinner-grow" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      </Loader>
+    ) : this.state.articles.length === 0 ? (
+      <EmptyView />
+    ) : (
+      <div className="container">
+        <ArticlesControl className="row">
+          <LeftCol className="col col-md-8 justify-content-start">
+            <CategoriesChecklist
+              categories={this.state.categories}
+              toggleCategory={this.toggleCategory}
+            />
+          </LeftCol>
+
+          <RightCol className="col col-md-4 justify-content-end">
+            <SortOrdering
+              sortingOrder={this.state.sortingOrder}
+              toggleSortingOrder={this.toggleSortingOrder}
+            />
+          </RightCol>
+        </ArticlesControl>
+
+        <div className="row justify-content-center">
+          <div className="col-sm-12 col-md-8">
+            <Articles
+              articles={prepareArticlesList(
+                this.state.articles,
+                this.state.sortingOrder,
+                this.state.categories
+              )}
+            />
+          </div>
         </div>
       </div>
     );

@@ -1,5 +1,5 @@
 import React from "react";
-// newlines
+
 type SortingOrderProps = {
   sortingOrder: SortingOrders;
   toggleSortingOrder: () => void;
@@ -7,21 +7,19 @@ type SortingOrderProps = {
 export type SortingOrders = "asc" | "desc";
 
 export const SortOrdering = (props: SortingOrderProps) => (
-  <div>
-    <p>Sort by:</p>
-    <form>
-      <label>
-        {props.sortingOrder === "asc" ? "Oldest" : "Newest"}
-        <button type="button" onClick={props.toggleSortingOrder}>
-          <span>
-            {props.sortingOrder === "asc" ? (
-              <i className="material-icons">expand_less</i>
-            ) : (
-              <i className="material-icons">expand_more</i>
-            )}
-          </span>
-        </button>
-      </label>
-    </form>
-  </div>
+  <form>
+    <div className="form-row align-items-center">
+      <div> Sort by:</div>
+      <div className="col-auto my-1">
+        <select
+          className="custom-select mr-sm-2"
+          value={props.sortingOrder}
+          onChange={props.toggleSortingOrder}
+        >
+          <option value="desc">Newest</option>
+          <option value="asc">Oldest</option>
+        </select>
+      </div>
+    </div>
+  </form>
 );
