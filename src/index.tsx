@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { sortWith, descend, ascend, props } from "ramda";
+import { sortWith, descend, ascend } from "ramda";
 import parse from "date-fns/parse";
 import nb from "date-fns/locale/nb";
 
@@ -13,8 +13,6 @@ import { SortOrdering, SortingOrders } from "./components/sortOrdering";
 import { LeftCol, RightCol, ArticlesControl, Loader } from "./indexStyle";
 
 import "bootstrap/dist/css/bootstrap.css";
-//react-select for sort https://react-select.com/home#getting-started
-// formik for filter https://jaredpalmer.com/formik/docs/overview
 
 type State = {
   loading: boolean;

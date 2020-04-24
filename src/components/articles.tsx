@@ -2,7 +2,6 @@ import React from "react";
 
 import { SingleArticle, ArticlesList } from "./articleStyle";
 
-// As a PO I decided to allow image and preamble to be null, but if other articles' property is null, article shouldn't be rendered.
 export type Article = {
   id: number;
   date: string;
@@ -12,7 +11,7 @@ export type Article = {
   title: string;
 };
 type ArticlesState = {
-  preableToggled?: number;
+  preambleToggled?: number;
 };
 
 export class Articles extends React.Component<
@@ -28,8 +27,8 @@ export class Articles extends React.Component<
   toggledPreamble(e: React.MouseEvent, articleID: number) {
     e.preventDefault();
     this.setState({
-      preableToggled:
-        this.state.preableToggled === articleID ? undefined : articleID
+      preambleToggled:
+        this.state.preambleToggled === articleID ? undefined : articleID
     });
   }
 
@@ -61,7 +60,7 @@ export class Articles extends React.Component<
                     </div>
                     {article.preamble ? (
                       <div className="col-md-12 hide-preamble">
-                        {this.state.preableToggled === article.id ? (
+                        {this.state.preambleToggled === article.id ? (
                           <div>
                             <p className="card-text">
                               {article.preamble}

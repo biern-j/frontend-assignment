@@ -12,8 +12,6 @@ export const CategoriesChecklist = (props: CategoriesProps) => (
   <div>
     Data Source:
     {props.categories.length === 1 ? (
-      // If only one option is avaliable, I want to show it for the user. It don't have to be disabled input, it can be just label with name of avaliable category
-
       <div className="form-check">
         <label className="form-check-label">
           <input
