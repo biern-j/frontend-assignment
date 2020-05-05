@@ -1,24 +1,29 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const ArticlesList = styled.ul`
   padding: 0;
-`;
+`
 
 export const SingleArticle = styled.li`
   list-style: none;
   .no-gutters {
-    max-width: 700px;
+    max-width: 100%;
     min-height: 150px;
   }
+
+  .main {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+
   .card-img {
-    width: 100%;
     max-height: 150px;
-    height: 100%;
   }
 
   .preamble {
     display: flex;
   }
+
   .card-text {
     min-width: 0;
     margin-bottom: 0;
@@ -39,9 +44,7 @@ export const SingleArticle = styled.li`
 
   @media (max-width: 678px) {
     .card-img {
-      width: 100%;
       max-height: none;
-      height: 100%;
     }
     .hide-preamble {
       display: none;
@@ -51,4 +54,4 @@ export const SingleArticle = styled.li`
       height: inherit;
     }
   }
-`;
+`
