@@ -3,7 +3,6 @@ import styled from 'styled-components'
 export const ArticlesList = styled.ul`
   padding: 0;
 `
-
 export const SingleArticle = styled.li`
   list-style: none;
   .no-gutters {
