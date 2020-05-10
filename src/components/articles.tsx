@@ -12,7 +12,7 @@ export type Article = {
   title: string
 }
 
-export const Articles = (props: { articles: Article[] }) => {
+const Articles = React.memo((props: { articles: Article[] }) => {
   const [preambleToggled, toggledPreamble] = useState<number | undefined>()
   const theme = useContext<Themes>(ThemeContext)
   console.log('theme', theme)
@@ -94,4 +94,6 @@ export const Articles = (props: { articles: Article[] }) => {
       ))}
     </ArticlesList>
   )
-}
+})
+
+export default React.memo(Articles)

@@ -5,7 +5,7 @@ import parse from 'date-fns/parse'
 import nb from 'date-fns/locale/nb'
 
 import { articlesRequest } from './apiHelpers'
-import { Articles, Article } from './components/articles'
+import Articles, { Article } from './components/articles'
 import { CategoriesChecklist, Category } from './components/categories'
 import { EmptyView } from './components/emptyView'
 import { SortOrdering, SortingOrders } from './components/sortOrdering'
