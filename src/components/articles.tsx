@@ -48,14 +48,15 @@ export const Articles = (props: { articles: Article[] }) => {
                           <p className="card-text">
                             {article.preamble}
                             <a
-                              href="#"
-                              onClick={() =>
+                              href=""
+                              onClick={(e) => {
+                                e.preventDefault()
                                 toggledPreamble(
                                   preambleToggled === article.id
                                     ? undefined
                                     : article.id,
                                 )
-                              }
+                              }}
                             >
                               [See less]
                             </a>
@@ -67,14 +68,15 @@ export const Articles = (props: { articles: Article[] }) => {
                             {article.preamble}
                           </p>
                           <a
-                            href="#"
-                            onClick={() =>
+                            href=""
+                            onClick={(e) => {
+                              e.preventDefault()
                               toggledPreamble(
                                 preambleToggled === article.id
                                   ? undefined
                                   : article.id,
                               )
-                            }
+                            }}
                           >
                             [Preamble]
                           </a>
