@@ -22,8 +22,12 @@ import { ThemeContext, themes, Mood } from './themes'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
+type ArticlesState =
+  | { kind: 'loading' }
+  | { kind: 'loaded'; articles: Article[] }
+
 const App = () => {
-  const [loading, setLoader] = useState<boolean>()
+  const [loading, setLoader] = useState<boolean>(true)
   const [articles, setArticles] = useState<Article[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [sortingOrder, toggleSortingOrder] = useState<'desc' | 'asc'>('desc')
@@ -31,15 +35,11 @@ const App = () => {
 
   useEffect(() => {
     getArticles().then((response) => {
-      setLoader(false)
       setArticles(response)
-      console.log('x', getUniqueArticlesCategories(response))
-
       setCategories(getUniqueArticlesCategories(response))
-      console.log('y')
+      setLoader(false)
     })
   }, [])
-  console.log('categories', categories)
   return loading ? (
     <Loader>
       <div className="spinner-grow" role="status">
