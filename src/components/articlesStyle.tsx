@@ -1,5 +1,18 @@
 import styled from 'styled-components'
 
+const customMediaQuery = (maxWidth: number) =>
+  `@media (max-width: ${maxWidth}px)`
+
+const media = {
+  custom: customMediaQuery,
+
+  desktop: customMediaQuery(922),
+
+  tablet: customMediaQuery(768),
+
+  phone: customMediaQuery(576),
+}
+
 export const ArticlesList = styled.ul`
   padding: 0;
 `
@@ -28,7 +41,6 @@ export const SingleArticle = styled.li`
     margin-bottom: 0;
   }
 
-  //Change style for hyperlink element
   .card-text a {
     white-space: nowrap;
   }
@@ -40,8 +52,7 @@ export const SingleArticle = styled.li`
     overflow: hidden;
     height: 3em;
   }
-
-  @media (max-width: 678px) {
+  ${media.phone} {
     .card-img {
       max-height: none;
     }
