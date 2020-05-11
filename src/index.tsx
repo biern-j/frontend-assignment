@@ -48,6 +48,18 @@ const months = [
   ['December', 'desember'],
 ]
 
+// type MyMapType = <U>(arg: T[]) => U[]
+
+// const myMap = <U>(sampleArray: T[]): U[] => {
+//   let newArray: U[] = []
+//   for (let i: number = 0; i <= sampleArray.length; i++) {
+//     newArray = newArray.push(i)
+//   }
+//   return newArray
+// }
+// const result: MyMapType = myMap<number>(['q', 'b', 'c']: string[])
+// console.log('result', result)
+
 type ArticlesState =
   | { kind: 'loading' }
   | { kind: 'loaded'; articles: Article[] }
