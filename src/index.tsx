@@ -48,17 +48,18 @@ const months = [
   ['December', 'desember'],
 ]
 
-// type MyMapType = <U>(arg: T[]) => U[]
-
-// const myMap = <U>(sampleArray: T[]): U[] => {
-//   let newArray: U[] = []
-//   for (let i: number = 0; i <= sampleArray.length; i++) {
-//     newArray = newArray.push(i)
-//   }
-//   return newArray
-// }
-// const result: MyMapType = myMap<number>(['q', 'b', 'c']: string[])
-// console.log('result', result)
+const myMap = <U, T>(
+  sampleArray: T[],
+  func: (item: T, index: number) => U,
+): U[] => {
+  let newArray: U[] = []
+  for (let i = 0; i <= sampleArray.length; i++) {
+    newArray.push(func(sampleArray[i], i))
+  }
+  return newArray
+}
+const result = myMap(['q', 'b', 'c'], (item, index) => index)
+console.log('result', result)
 
 type ArticlesState =
   | { kind: 'loading' }
