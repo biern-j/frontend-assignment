@@ -22,6 +22,32 @@ import { ThemeContext, themes, Mood } from './themes'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
+const months = [
+  ['January', 'januar'],
+
+  ['February', 'februar'],
+
+  ['March', 'mars'],
+
+  ['April', 'april'],
+
+  [' May', 'mai'],
+
+  ['June', 'juni'],
+
+  [' July', 'juli'],
+
+  ['August', 'august'],
+
+  ['September', 'september'],
+
+  ['October', 'oktober'],
+
+  [' November', 'november'],
+
+  ['December', 'desember'],
+]
+
 type ArticlesState =
   | { kind: 'loading' }
   | { kind: 'loaded'; articles: Article[] }
@@ -40,6 +66,7 @@ const App = () => {
       setLoader(false)
     })
   }, [])
+
   return loading ? (
     <Loader>
       <div className="spinner-grow" role="status">
@@ -101,7 +128,7 @@ const prepareArticlesList = (
   sortingOrder: SortingOrders,
   categories: Category[],
 ) => {
-  const sortedArticles = sortedArticlesByDate(articles, sortingOrder)
+  const sortedArticles = sortedArticlesByDateV2(articles, sortingOrder)
   const filteredArticles = filterByCategory(sortedArticles, categories)
   return filteredArticles
 }
@@ -154,6 +181,26 @@ const getArticles = async (): Promise<Article[]> => {
     (acc, curr) => [...acc, ...(curr.articles || [])],
     [] as Article[],
   )
+}
+
+const sortedArticlesByDateV2 = (
+  articles: Article[],
+  sortingOrder: SortingOrders,
+) => {
+  const articlesToSort = articles.map((article) => {
+    const date = article.date.replace('.', '').split(' ')
+    const month = months.find((month) => {
+      return month[1] === date[1]
+    })!
+    const parsedDate = new Date(`${month[0]} ${date[0]}, ${date[2]} 0:00:00`)
+    return { ...article, parsedDate }
+  })
+  const sortDescend = sortWith<Article & { parsedDate: Date }>(
+    sortingOrder === 'desc'
+      ? [descend((art) => art.parsedDate)]
+      : [ascend((art) => art.parsedDate)],
+  )
+  return sortDescend(articlesToSort)
 }
 
 ReactDOM.render(<App />, document.getElementById('app'))

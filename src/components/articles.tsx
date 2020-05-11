@@ -15,7 +15,6 @@ export type Article = {
 const Articles = React.memo((props: { articles: Article[] }) => {
   const [preambleToggled, toggledPreamble] = useState<number | undefined>()
   const theme = useContext<Themes>(ThemeContext)
-  console.log('theme', theme)
   return (
     <ArticlesList>
       {props.articles.map((article: Article) => (
